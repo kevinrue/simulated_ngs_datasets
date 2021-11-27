@@ -1,0 +1,39 @@
+---
+title: "Human, chromosome 22, gene 1"
+author: "Kevin Rue-Albrecht"
+date: "27/11/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(BSgenome.Hsapiens.UCSC.hg38)
+library(TxDb.Hsapiens.UCSC.hg38.knownGene)
+dir.create("outputs")
+```
+
+```{r}
+genome <- BSgenome.Hsapiens.UCSC.hg38
+txdb <- TxDb.Hsapiens.UCSC.hg38.knownGene
+```
+
+```{r}
+tx2chr <- select(x = txdb, keys = keys(txdb, "TXNAME"), columns = c("EXONCHROM"), keytype = "TXNAME")
+chr22_tx_names <- subset(tx2chr, EXONCHROM == "chr22", "TXNAME", drop = TRUE)[1:2]
+chr22_tx_names
+```
+
+```{r}
+transcripts <- exonsBy(txdb, by="tx", use.names=TRUE)
+chr22_tx_ranges <- transcripts[chr22_tx_names]
+chr22_tx_ranges
+```
+
+```{r}
+tx_seqs <- extractTranscriptSeqs(genome, chr22_tx_ranges)
+tx_seqs
+```
+
+```{r}
+writeXStringSet(x = tx_seqs, filepath = "outputs/chr22.genes2.fa")
+```
