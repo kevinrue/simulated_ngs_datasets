@@ -42,8 +42,8 @@ writeXStringSet(x = tx_seqs, filepath = "outputs/chr22.genes2.fa")
 ```{r}
 readspertx <- round(20 * width(tx_seqs) / 100)
 fold_changes = matrix(c(4, 1, 1, 4), ncol=2)
-set.seed(1)
 simulate_experiment('outputs/chr22.genes2.fa', reads_per_transcript=readspertx, 
-    num_reps=c(1, 1), fold_changes=fold_changes, outdir='outputs/simulated_reads') 
+    num_reps=c(1, 1), fold_changes=fold_changes, outdir='outputs/simulated_reads',
+    seed = 1) 
 ```
 
