@@ -46,4 +46,3 @@ simulate_experiment('outputs/chr22.genes2.fa', reads_per_transcript=readspertx,
     num_reps=c(1, 1), fold_changes=fold_changes, outdir='outputs/simulated_reads',
     seed = 1) 
 ```
-
