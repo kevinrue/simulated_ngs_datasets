@@ -1,3 +1,0 @@
-transcriptid	foldchange.1	foldchange.2	DEstatus.1	DEstatus.2
-ENST00000624155.2	4	1	TRUE	FALSE
-ENST00000422332.1	1	4	FALSE	TRUE
