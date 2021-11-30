@@ -62,6 +62,6 @@ gff_data <- rtracklayer::import.gff("downloads/Homo_sapiens.GRCh38.104.chr.gtf.g
 # chr22_tx_names %in% gff_data$transcript_id
 # gsub("\\.[[:digit:]]+", "", chr22_tx_names) %in% gff_data$transcript_id
 gff_subset <- subset(gff_data, transcript_id %in% gsub("\\.[[:digit:]]+", "", chr22_tx_names))
-export.gff2(gff_subset, "outputs/chr22.genes2.gtf.gz")
+export.gff2(gff_subset, "outputs/chr22.genes2.gtf")
 ```
 
