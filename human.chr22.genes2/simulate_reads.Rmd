@@ -1,0 +1,67 @@
+---
+title: "Human, chromosome 22, gene 1"
+author: "Kevin Rue-Albrecht"
+date: "27/11/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(BSgenome.Hsapiens.UCSC.hg38)
+library(TxDb.Hsapiens.UCSC.hg38.knownGene)
+library(polyester)
+dir.create("outputs")
+```
+
+## Reads
+
+```{r}
+genome <- BSgenome.Hsapiens.UCSC.hg38
+txdb <- TxDb.Hsapiens.UCSC.hg38.knownGene
+```
+
+```{r}
+tx2chr <- select(x = txdb, keys = keys(txdb, "TXNAME"), columns = c("EXONCHROM"), keytype = "TXNAME")
+chr22_tx_names <- subset(tx2chr, EXONCHROM == "chr22", "TXNAME", drop = TRUE)[1:2]
+chr22_tx_names
+```
+
+```{r}
+transcripts <- exonsBy(txdb, by="tx", use.names=TRUE)
+chr22_tx_ranges <- transcripts[chr22_tx_names]
+chr22_tx_ranges
+```
+
+```{r}
+tx_seqs <- extractTranscriptSeqs(genome, chr22_tx_ranges)
+tx_seqs
+```
+
+```{r}
+writeXStringSet(x = tx_seqs, filepath = "outputs/chr22.genes2.fa")
+```
+
+```{r}
+readspertx <- round(20 * width(tx_seqs) / 100)
+fold_changes = matrix(c(4, 1, 1, 4), ncol=2)
+simulate_experiment('outputs/chr22.genes2.fa', reads_per_transcript=readspertx, 
+    num_reps=c(1, 1), fold_changes=fold_changes, outdir='outputs/simulated_reads',
+    seed = 1) 
+```
+
+## GTF
+
+```{r}
+download.file(
+    url = "http://ftp.ensembl.org/pub/release-104/gtf/homo_sapiens/Homo_sapiens.GRCh38.104.chr.gtf.gz",
+    destfile = "downloads/Homo_sapiens.GRCh38.104.chr.gtf.gz")
+```
+
+```{r}
+gff_data <- rtracklayer::import.gff("downloads/Homo_sapiens.GRCh38.104.chr.gtf.gz")
+# chr22_tx_names %in% gff_data$transcript_id
+# gsub("\\.[[:digit:]]+", "", chr22_tx_names) %in% gff_data$transcript_id
+gff_subset <- subset(gff_data, transcript_id %in% gsub("\\.[[:digit:]]+", "", chr22_tx_names))
+export.gff2(gff_subset, "outputs/chr22.genes2.gtf")
+```
+
