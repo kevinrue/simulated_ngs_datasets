@@ -1,4 +1,4 @@
-name: hisat2
+name: human.chr22.genes2
 channels:
   - bioconda
   - conda-forge
@@ -6,4 +6,5 @@ channels:
 dependencies:
   - python==3.9
   - hisat2
+  - seqkit
   - bioconvert
